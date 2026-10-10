@@ -1,0 +1,1 @@
+{"$schema":"https://json.schemastore.org/claude-code-marketplace.json","name":"lhg-plugs","owner":{"name":"刘洪光"},"plugins":[{"description":"保险配置助手：家庭保障缺口分析→四险种配置方案→条款坑点清单；仅知识科普，非持牌保险建议","name":"lhg-insurance","source":"./"}]}

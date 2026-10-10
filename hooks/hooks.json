@@ -1,0 +1,1 @@
+{"hooks":{"PreToolUse":[{"hooks":[{"command":"python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/pre_compliance_gate.py\"","timeout":30,"type":"command"}],"matcher":"Edit|Write"}]}}
