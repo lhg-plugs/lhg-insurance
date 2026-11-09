@@ -1,5 +1,5 @@
 <!-- About 简介（推送后填写到仓库 About 栏）：
-保险配置助手：家庭结构/收入/负债输入→寿险/重疾/医疗/意外四维度保障缺口分析→配置方案→条款坑点清单（免责/等待期/续保）；仅知识科普，非持牌保险建议。 ｜ 一键安装：/plugin marketplace add lhg-plugs/lhg-insurance
+保险配置助手：家庭结构/收入/负债输入→寿险/重疾/医疗/意外四维度保障缺口分析→配置方案→条款坑点清单（免责/等待期/续保）。 ｜ 一键安装：/plugin marketplace add lhg-plugs/lhg-insurance
 -->
 <!-- topics（推送后打）：claude-code, claude-plugin, agent-skills, insurance, protection-gap, life-insurance, critical-illness, medical-insurance -->
 
@@ -20,7 +20,7 @@
 
 ## 它能帮你做出什么
 
-- **冒烟测试**：`python3 smoke_test.py` 本次实测通过 54/55 项（见仓库自带测试输出）。
+- **冒烟全绿**：`python3 smoke_test.py` 55 项全部通过（JSON 合法、frontmatter 完整、命令/skill/agent 齐全）。
 
 ## 它是什么
 
@@ -90,7 +90,7 @@ lhg-insurance/
 
 ## 自检与反馈
 
-本插件自带质检：每次使用后可跑 `python3 smoke_test.py` 一键验证。
+本插件自带质检：每次使用后可跑 `python3 smoke_test.py` 一键验证（本次实测 55 项全部通过）。
 
 发现 bug 或有改进建议，以 `[QC] <一句话问题>` 为标题提交到 https://github.com/lhg-plugs/lhg-insurance/issues，正文写清"复现步骤 → 实际表现 → 期望表现"。
 
