@@ -16,6 +16,8 @@
 /plugin install lhg-insurance@lhg-plugs
 ```
 
+> ⚠️ **合规声明（首屏置顶）**：本插件仅提供**保险知识科普与配置思路**，**非持牌保险建议**；投保前请咨询持牌保险顾问。本插件**不推荐任何具体保险产品**，**不承诺任何收益**。
+
 ## 它能帮你做出什么
 
 - **冒烟测试**：`python3 smoke_test.py` 本次实测通过 54/55 项（见仓库自带测试输出）。
@@ -78,6 +80,7 @@ lhg-insurance/
 ├── README.md              # 本文件
 ├── .claude-plugin/
 ├── agents/
+├── assets/
 ├── commands/
 ├── fixtures/
 ├── hooks/
