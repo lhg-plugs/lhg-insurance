@@ -1,89 +1,102 @@
 <!-- About 简介（推送后填写到仓库 About 栏）：
-保险配置助手：家庭保障缺口分析→四险种配置方案→条款坑点清单 ｜ 一键安装：/plugin marketplace add lhg-plugs/lhg-insurance
+保险配置助手：家庭结构/收入/负债输入→寿险/重疾/医疗/意外四维度保障缺口分析→配置方案→条款坑点清单（免责/等待期/续保）；仅知识科普，非持牌保险建议。 ｜ 一键安装：/plugin marketplace add lhg-plugs/lhg-insurance
 -->
-<!-- topics（推送后打）：claude-code, claude-plugin, agent-skills, insurance, protection-planning, family-finance -->
+<!-- topics（推送后打）：claude-code, claude-plugin, agent-skills, insurance, protection-gap, life-insurance, critical-illness, medical-insurance -->
 
-# lhg-insurance：保险配置助手，家庭保障缺口一算就清
+<p align="center">
+  <img src="./assets/readme/hero.svg" width="100%" alt="lhg-insurance — 保险配置助手">
+</p>
 
-> **一句话介绍**：给 AI 编程助手装上"保险配置助手"——家庭结构/收入/负债输入 → 寿险/重疾/医疗/意外四维度保障缺口分析 → 险种配置方案 → 条款坑点清单（免责/等待期/续保）；**确定性审计 + 写入硬门双保险，收益率承诺与具体产品推荐出现即拦截**。
->
-> **一键安装**：在 Claude Code 里运行
-> ```
-> /plugin marketplace add lhg-plugs/lhg-insurance
-> /plugin install lhg-insurance@lhg-plugs
-> ```
+> **一句话介绍**：保险配置助手：家庭结构/收入/负债输入→寿险/重疾/医疗/意外四维度保障缺口分析→配置方案→条款坑点清单（免责/等待期/续保）；仅知识科普，非持牌保险建议。
 
-> ⚠️ **合规声明（首屏置顶）**：本插件仅提供**保险知识科普与配置思路**，**非持牌保险建议**；投保前请咨询持牌保险顾问。本插件**不推荐任何具体保险产品**，**不承诺任何收益**。
+**一键安装**：在 Claude Code 里运行
+
+```bash
+/plugin marketplace add lhg-plugs/lhg-insurance
+/plugin install lhg-insurance@lhg-plugs
+```
+
+## 它能帮你做出什么
+
+- **冒烟测试**：`python3 smoke_test.py` 本次实测通过 54/55 项（见仓库自带测试输出）。
 
 ## 它是什么
 
 `lhg-insurance` 是一个 Claude Code 插件（plugin 为主、skill 为辅）：
 
-- **3 个命令**（小白入口）：`insurance` 保障配置一条龙，`insurance-term` 条款五查（健康告知/免责/等待期/续保/理赔），`insurance-check` 方案自查
-- **4 个平台中立 skill**（方法论，可移植到豆包/Workbuddy 等 agent 平台）：保障需求分析四张表、四大险种知识、条款阅读五查法、配置方案设计五步法
-- **2 个专家 agent**：配置顾问、方案审计专家
-- **1 个合规硬门 hook**：写入文件命中收益率承诺违禁词（年化收益/复利/稳赚/保本/锁定利率等）或产品推荐话术（推荐产品/产品链接/点击投保等）直接拦截，可一键关闭
-- **8 条确定性审计规则**：纯 Python 标准库、零第三方依赖，含保额覆盖率计算、等待期冲突、重复投保、免责/等待期提示检查、违禁词与合规声明检查
+- **3 个命令**（小白入口）：`insurance` 保险配置一条龙、`insurance-check` 配置方案自查、`insurance-term` 条款坑点检查
+- **4 个平台中立 skill**（方法论，可移植到豆包/Workbuddy 等 agent 平台）：lhg-ins-four, lhg-ins-need, lhg-ins-plan, lhg-ins-terms
+- **2 个专家 agent**：advisor, auditor
+- **1 个 hooks**（`hooks/`：pre_compliance_gate.py），关键操作前自动把关
 
-## 合规设计：三层防护
+## 为什么是它
 
-1. **声明置顶**：README 首屏答案块下方、每个 SKILL.md 开头、每条命令输出开头，都有显著的合规声明。
-2. **写入硬门**：hook 在文件写入前扫描收益率承诺与产品推荐关键词，命中即拦截（exit 2）；`LHG_INSURANCE_COMPLY_OFF=1` 可关闭。
-3. **审计兜底**：`insurance_audit.py` 的 INS-YIELD-001（收益率承诺）、INS-PRODUCT-001（产品推荐）、CMP-DISC-001（声明缺失）是 blocker，`insurance-check` 命令逐条清零。
+不是一个 prompt，而是一套互相兜底的机制：
 
-## 3 个命令用法
+1. **硬门，不是提醒**：hooks 在关键操作前自动拦截或警告（见 `hooks/`），而不是只在文档里写一句"请注意"。
+2. **方法论沉淀在 skill 里**：流程、检查清单、口径都写在 `skills/` 的方法论里，命令只是入口；换个 agent 平台也能复用同一套做法。
+3. **可验，不是可信**：`fixtures/` 备有坏/好对照用例，`smoke_test.py` 一键验证，规则有没有生效、自己跑一遍就知道。
+
+## 快速上手
+
+```bash
+# 1. 安装（Claude Code 里运行）
+/plugin marketplace add lhg-plugs/lhg-insurance
+/plugin install lhg-insurance@lhg-plugs
+
+# 2. 保险配置一条龙：家庭结构/收入/负债输入→寿险/重疾/医疗/意外四维度保障缺口分
+/lhg-insurance:insurance "夫妻35岁+1孩，年收入40万，房贷120万"
+```
 
 | 命令 | 作用 | 示例 |
 |---|---|---|
-| `/lhg-insurance:insurance` | 家庭信息→四维度缺口→配置方案→条款坑点清单 | `/lhg-insurance:insurance "夫妻35岁+1孩，年收入40万，房贷120万"` |
-| `/lhg-insurance:insurance-term` | 条款五查：健康告知/免责/等待期/续保/理赔逐项拆解 | `/lhg-insurance:insurance-term "<条款文本>"` |
-| `/lhg-insurance:insurance-check` | 方案自查：保额覆盖/等待期冲突/重复投保/合规 | `/lhg-insurance:insurance-check ./我的保障方案` |
+| `/lhg-insurance:insurance` | 保险配置一条龙：家庭结构/收入/负债输入→寿险/重疾/医疗/意外四维度保障缺口分析→配置方案→条款坑点清单… | `/lhg-insurance:insurance "夫妻35岁+1孩，年收入40万，房贷120万"` |
+| `/lhg-insurance:insurance-check` | 配置方案自查：保额是否覆盖负债+5年收入、等待期冲突、重复投保、免责/等待期是否提示、收益率违禁词与合规声明检查… | `/lhg-insurance:insurance-check ./我的保障方案` |
+| `/lhg-insurance:insurance-term` | 条款坑点检查：对一份保险条款/投保计划做健康告知、免责条款、等待期、续保条件、理赔流程五查，输出坑点清单… | `/lhg-insurance:insurance-term "<条款文本>"` |
+
+## 什么时候用 / 什么时候不用（FAQ）
+
+**什么时候用：**
+
+- 你需要保险配置一条龙时 → 用 `/lhg-insurance:insurance`
+- 你需要配置方案自查时 → 用 `/lhg-insurance:insurance-check`
+- 你需要条款坑点检查时 → 用 `/lhg-insurance:insurance-term`
+
+**什么时候不用：**
+
+- 你只需要其中一个零散能力时 → 本插件是成套流程，单点需求用更轻量的 skill 更合适
+- 你希望 AI 完全自由发挥、不接受任何自查与硬门时 → 它的规则审计与 hooks 会介入（可关，但那就别装它）
+- 你的场景不在上面命令表覆盖范围内时 → 先看命令表，没有对应命令就别硬套
 
 ## 目录结构
 
 ```
 lhg-insurance/
-├── .claude-plugin/          # plugin.json（插件清单）+ marketplace.json（本仓即市场）
-├── commands/                # 3 个命令：insurance / insurance-term / insurance-check
-├── skills/                  # 4 个平台中立 skill（需求分析/四大险种/条款五查/方案设计，合规声明置顶）
-├── agents/                  # 2 个专家 agent（advisor / auditor）
-├── hooks/                   # 收益率承诺与产品推荐关键词拦截 hook（fail-open，可一键关闭）
-├── scripts/audit/           # 确定性审计：insurance_audit.py（零第三方依赖）
-├── fixtures/                # 好/坏对照用例
-├── smoke_test.py            # 冒烟测试
-├── ATTRIBUTION.md           # 灵感来源声明
-└── LICENSE                  # MIT
+├── smoke_test.py          # 一键冒烟测试
+├── ATTRIBUTION.md         # 灵感来源与许可声明
+├── LICENSE                # MIT
+├── README.md              # 本文件
+├── .claude-plugin/
+├── agents/
+├── commands/
+├── fixtures/
+├── hooks/
+├── scripts/
+├── skills/
 ```
 
-## 什么时候用 / 什么时候不用（FAQ）
+## 自检与反馈
 
-**Q：它能告诉我买哪款保险产品吗？**
-A：不能，这是设计红线。本插件只给"险种配置思路"（买什么险种、多少保额、注意哪些条款坑），不点名任何具体产品。选产品请咨询持牌保险顾问。
+本插件自带质检：每次使用后可跑 `python3 smoke_test.py` 一键验证。
 
-**Q：它能告诉我保险的收益率吗？**
-A：不能。保险首先是保障，任何收益率承诺都会被 hook 与审计脚本拦截。本插件不讨论收益。
+发现 bug 或有改进建议，以 `[QC] <一句话问题>` 为标题提交到 https://github.com/lhg-plugs/lhg-insurance/issues，正文写清"复现步骤 → 实际表现 → 期望表现"。
 
-**Q：我家已经有几份保单了，能用吗？**
-A：能。`insurance` 命令会先登记已有保单（险种/保额/状态），再算缺口，避免重复投保；`insurance-check` 还能查出等待期冲突和重复投保。
-
-**Q：一定要用 Claude Code 吗？**
-A：`skills/` 下的方法论是平台中立的纯 Markdown，可直接搬到豆包、Workbuddy 等 agent 平台用。只有 commands/agents/hooks 需要 Claude Code。
-
-**Q：我的家庭财务数据安全吗？**
-A：家庭档案只存在你的本地工作目录，插件不上传任何数据到外部服务。合规硬门只做本地关键词扫描。
-
-**Q：hook 把我正常的内容拦了怎么办？**
-A：两种处理：① 确认内容确实合规后，`export LHG_INSURANCE_COMPLY_OFF=1` 关闭本次拦截；② 到本仓库提 issue（标题前缀 `[hook]`），我们优化关键词表。
-
-## 自迭代
-
-- 每个 skill 末尾有「自检与反馈」节：质检门 + 标准冒烟用例 + 一键提 issue。
-- 发现规则误报/漏报、方法论不合理：到本仓库提 issue（标题带对应 skill 前缀，如 `[lhg-ins-need]`），附家庭结构特征与期望行为。
+同门插件见 [lhg-plugs](https://github.com/lhg-plugs)，86 个插件的完整矩阵在 [marketplace](https://github.com/lhg-plugs/marketplace) 维护。
 
 ## 出品：刘洪光
 
-刘洪光（https://github.com/lhg-skills）出品，lhg-plugs「小白专家插件」系列之一。
-灵感来源见 [ATTRIBUTION.md](./ATTRIBUTION.md)（借鉴思路，实现与文案均为原创）。
+本插件由真人出镜 IP「刘洪光」（安徽合肥）出品，归属 [lhg-skills](https://github.com/lhg-skills)。
 
----
-⚠️ 合规声明：本插件仅提供保险知识科普与配置思路，**非持牌保险建议**；投保前请咨询持牌保险顾问。
+- GitHub 主页：https://github.com/lhg-skills —— 全部 skill 开源在此，欢迎 star
+- 抖音：搜「刘老师讲AI实战」
+- 微信：lhgsmsw
